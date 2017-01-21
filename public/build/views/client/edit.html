@@ -1,0 +1,22 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Editar cliente</div>
+                <div class="panel-body">
+
+                    <div class="alert alert-danger" ng-show="error.error">
+                        <strong>Whoops!</strong> Ocorreu um erro.<br><br>
+                        <ul>
+                            <li ng-repeat="o in error.message">{{ o[0] }}</li>
+                        </ul>
+                    </div>
+
+                    <form class="form-horizontal" name="form" role="form" method="POST" ng-submit="save()">
+                        <div ng-include="'build/views/client/_form.html'"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
