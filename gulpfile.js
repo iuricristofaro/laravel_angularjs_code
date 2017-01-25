@@ -24,9 +24,9 @@ config.vendor_path_js = [
     config.bower_path + '/angular-messages/angular-messages.min.js',
     config.bower_path + '/angular-bootstrap/ui-bootstrap-tpls.min.js',
     config.bower_path + '/angular-strap/dist/modules/navbar.min.js',
-    // config.bower_path + '/angular-cookies/angular-cookies.min.js',
-    // config.bower_path + '/query-string/query-string.js',
-    // config.bower_path + '/angular-oauth2/dist/angular-oauth2.min.js',
+    config.bower_path + '/angular-cookies/angular-cookies.min.js',
+    config.bower_path + '/query-string/query-string.js',
+    config.bower_path + '/angular-oauth2/dist/angular-oauth2.min.js',
     // config.bower_path + '/ng-file-upload/ng-file-upload.js',
     // config.bower_path + '/angular-http-auth/src/http-auth-interceptor.js',
     // config.bower_path + '/angularUtils-pagination/dirPagination.js',
@@ -118,8 +118,3 @@ gulp.task('watch-dev',['clear-build-folder'], function(){
     gulp.start('copy-styles', 'copy-scripts', 'copy-html', 'copy-fonts', 'copy-images');
     gulp.watch(config.assets_path + '/**', ['copy-styles','copy-scripts', 'copy-html','copy-fonts', 'copy-images']);
 });
-
-
-// elixir(function(mix) {
-//     mix.sass('app.scss');
-// });

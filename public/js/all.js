@@ -406,7 +406,7 @@ angular.module("ui.bootstrap",["ui.bootstrap.tpls","ui.bootstrap.transition","ui
  */
 'use strict';angular.module('mgcrea.ngStrap.navbar',[]).provider('$navbar',function(){var t=this.defaults={activeClass:'active',routeAttr:'data-match-route',strict:!1};this.$get=function(){return{defaults:t}}}).directive('bsNavbar',['$window','$location','$navbar',function(t,a,r){var e=r.defaults;return{restrict:'A',link:function(t,r,n,i){var c=angular.copy(e);angular.forEach(Object.keys(e),function(t){angular.isDefined(n[t])&&(c[t]=n[t])}),t.$watch(function(){return a.path()},function(t,a){var e=r[0].querySelectorAll('li['+c.routeAttr+']');angular.forEach(e,function(a){var r=angular.element(a),e=r.attr(c.routeAttr).replace('/','\\/');c.strict&&(e='^'+e+'$');var n=new RegExp(e,'i');n.test(t)?r.addClass(c.activeClass):r.removeClass(c.activeClass)})})}}}]);
 //# sourceMappingURL=../modules/navbar.min.js.map
-var app = angular.module('app',['app.controllers']);
+var app = angular.module('app',['ngRoute','app.controllers']);
 
 angular.module('app.controllers', []);
 
@@ -419,435 +419,91 @@ app.config(function($routeProvider){
 
         .when('/home', {
                 templateUrl: 'build/views/home.html',
-                controller: 'HomeController',
-                title: 'Home'
+                controller: 'HomeController'
         })
 });
 
-// var app = angular.module('app', [
-//     'ngRoute', 'angular-oauth2', 'app.controllers', 'app.services', 'app.filters', 'app.directives',
-//     'ui.bootstrap.typeahead', 'ui.bootstrap.tpls', 'ui.bootstrap.datepicker', 'ui.bootstrap.modal',
-//     'ngFileUpload', 'http-auth-interceptor', 'angularUtils.directives.dirPagination',
-//     'ui.bootstrap.dropdown','pusher-angular', 'ui-notification'
-// ]);
 
-// angular.module('app.controllers', ['ngMessages']);
-// angular.module('app.filters', []);
-// angular.module('app.directives', []);
-// angular.module('app.services', ['ngResource']);
+// angular.module('app.controllers')
+//     .controller('HomeController', ['$scope','$cookies', '$timeout', '$pusher','$filter','appConfig','Project',
+//         function ($scope,$cookies,$timeout, $pusher,$filter,appConfig,Project) {
 
-// app.provider('appConfig', ['$httpParamSerializerProvider', function ($httpParamSerializerProvider) {
-//     var config = {
-//         baseUrl: 'http://localhost:8000',
-//         pusherKey: '08c3b7738ba454bac7b1',
-//         project: {
-//             status: [
-//                 {value: 1, label: 'Não iniciado'},
-//                 {value: 2, label: 'Iniciado'},
-//                 {value: 3, label: 'Concluído'},
-//             ]
-//         },
-//         projectTask: {
-//             status: [
-//                 {value: 1, label: 'Incompleta'},
-//                 {value: 2, label: 'Completa'},
-//             ]
-//         },
-//         urls: {
-//             projectFile: '/project/{{id}}/file/{{idFile}}'
-//         },
-//         utils: {
-//             transformRequest: function (data) {
-//                 if (angular.isObject(data)) {
-//                     return $httpParamSerializerProvider.$get()(data);
-//                 }
-//                 return data;
-//             },
-//             transformResponse: function (data, headers) {
-//                 var headersGetter = headers();
-//                 if (headersGetter['content-type'] == 'application/json' ||
-//                     headersGetter['content-type'] == 'text/json') {
-//                     var dataJson = JSON.parse(data);
-//                     if (dataJson.hasOwnProperty('data') && Object.keys(dataJson).length == 1) {
-//                         dataJson = dataJson.data;
+//             $scope.projects = [];
+//             $scope.notifications = [];
+//             $scope.status = appConfig.project.status;
+
+//             $scope.getStatus = function($id) {
+//                 for (var i = 0; i < $scope.status.length; i++) {
+//                     if($scope.status[i].value === $id){
+//                         return $scope.status[i].label;
 //                     }
-//                     return dataJson;
 //                 }
-//                 return data;
-//             }
-//         }
-//     };
+//                 return "";
+//             };
 
-//     return {
-//         config: config,
-//         $get: function () {
-//             return config;
-//         }
-//     }
-// }]);
-
-// app.config(['$routeProvider', '$httpProvider', 'OAuthProvider','OAuthTokenProvider', 'appConfigProvider',
-//     function ($routeProvider, $httpProvider, OAuthProvider, OAuthTokenProvider, appConfigProvider) {
-//         $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
-//         $httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
-//         $httpProvider.defaults.transformRequest = appConfigProvider.config.utils.transformRequest;
-//         $httpProvider.defaults.transformResponse = appConfigProvider.config.utils.transformResponse;
-//         $httpProvider.interceptors.splice(0,1);
-//         $httpProvider.interceptors.splice(0,1);
-//         $httpProvider.interceptors.push('oauthFixInterceptor');
-
-//         $routeProvider
-//             .when('/login', {
-//                 templateUrl: 'build/views/login.html',
-//                 controller: 'LoginController'
-//             })
-//             .when('/logout', {
-//                 resolve: {
-//                     logout: ['$location', 'OAuthToken', function ($location, OAuthToken) {
-//                         OAuthToken.removeToken();
-//                         return $location.path('/login');
-//                     }]
-//                 }
-//             })
-//             .when('/home', {
-//                 templateUrl: 'build/views/home.html',
-//                 controller: 'HomeController',
-//                 title: 'Home'
-//             })
-//             .when('/clients', {
-//                 templateUrl: 'build/views/client/list.html',
-//                 controller: 'ClientListController',
-//                 title: 'Clientes'
-//             })
-//             .when('/clients/dashboard', {
-//                 templateUrl: 'build/views/client/dashboard.html',
-//                 controller: 'ClientDashboardController',
-//                 title: 'Clientes'
-//             })
-//             .when('/client/new', {
-//                 templateUrl: 'build/views/client/new.html',
-//                 controller: 'ClientNewController',
-//                 title: 'Clientes'
-//             })
-//             .when('/client/:id/edit', {
-//                 templateUrl: 'build/views/client/edit.html',
-//                 controller: 'ClientEditController',
-//                 title: 'Clientes'
-//             })
-//             .when('/client/:id/remove', {
-//                 templateUrl: 'build/views/client/remove.html',
-//                 controller: 'ClientRemoveController',
-//                 title: 'Clientes'
-//             })
-
-//             .when('/projects', {
-//                 templateUrl: 'build/views/project/list.html',
-//                 controller: 'ProjectListController',
-//                 title: 'Projetos'
-//             })
-//             .when('/projects/dashboard', {
-//                 templateUrl: 'build/views/project/dashboard.html',
-//                 controller: 'ProjectDashboardController',
-//                 title: 'Projetos'
-//             })
-//             .when('/projects-member', {
-//                 templateUrl: 'build/views/project/list.html',
-//                 controller: 'ProjectsMemberListController',
-//                 title: 'Projetos compartilhados'
-//             })
-//             .when('/projects-member/dashboard', {
-//                 templateUrl: 'build/views/project/dashboard-projects-member.html',
-//                 controller: 'ProjectsMemberDashboardController',
-//                 title: 'Projetos compartilhados'
-//             })
-//             .when('/project/new', {
-//                 templateUrl: 'build/views/project/new.html',
-//                 controller: 'ProjectNewController',
-//                 title: 'Projetos'
-//             })
-//             .when('/project/:id/edit', {
-//                 templateUrl: 'build/views/project/edit.html',
-//                 controller: 'ProjectEditController',
-//                 title: 'Projetos'
-//             })
-//             .when('/project/:id/remove', {
-//                 templateUrl: 'build/views/project/remove.html',
-//                 controller: 'ProjectRemoveController',
-//                 title: 'Projetos'
-//             })
-
-//             .when('/project/:id/notes', {
-//                 templateUrl: 'build/views/project-note/list.html',
-//                 controller: 'ProjectNoteListController',
-//                 title: 'Projetos'
-//             })
-//             .when('/project/:id/note/:idNote/show', {
-//                 templateUrl: 'build/views/project-note/show.html',
-//                 controller: 'ProjectNoteShowController',
-//                 title: 'Projetos'
-//             })
-//             .when('/project/:id/note/new', {
-//                 templateUrl: 'build/views/project-note/new.html',
-//                 controller: 'ProjectNoteNewController',
-//                 title: 'Projetos'
-//             })
-//             .when('/project/:id/note/:idNote/edit', {
-//                 templateUrl: 'build/views/project-note/edit.html',
-//                 controller: 'ProjectNoteEditController',
-//                 title: 'Projetos'
-//             })
-//             .when('/project/:id/note/:idNote/remove', {
-//                 templateUrl: 'build/views/project-note/remove.html',
-//                 controller: 'ProjectNoteRemoveController',
-//                 title: 'Projetos'
-//             })
-
-
-//             .when('/project/:id/files', {
-//                 templateUrl: 'build/views/project-file/list.html',
-//                 controller: 'ProjectFileListController',
-//                 title: 'Projetos'
-//             })
-//             .when('/project/:id/file/new', {
-//                 templateUrl: 'build/views/project-file/new.html',
-//                 controller: 'ProjectFileNewController',
-//                 title: 'Projetos'
-//             })
-//             .when('/project/:id/file/:idFile/edit', {
-//                 templateUrl: 'build/views/project-file/edit.html',
-//                 controller: 'ProjectFileEditController',
-//                 title: 'Projetos'
-//             })
-//             .when('/project/:id/file/:idFile/remove', {
-//                 templateUrl: 'build/views/project-file/remove.html',
-//                 controller: 'ProjectFileRemoveController',
-//                 title: 'Projetos'
-//             })
-
-
-//             .when('/project/:id/tasks', {
-//                 templateUrl: 'build/views/project-task/list.html',
-//                 controller: 'ProjectTaskListController',
-//                 title: 'Projetos'
-//             })
-//             .when('/project/:id/task/new', {
-//                 templateUrl: 'build/views/project-task/new.html',
-//                 controller: 'ProjectTaskNewController',
-//                 title: 'Projetos'
-//             })
-//             .when('/project/:id/task/:idTask/edit', {
-//                 templateUrl: 'build/views/project-task/edit.html',
-//                 controller: 'ProjectTaskEditController',
-//                 title: 'Projetos'
-//             })
-//             .when('/project/:id/task/:idTask/remove', {
-//                 templateUrl: 'build/views/project-task/remove.html',
-//                 controller: 'ProjectTaskRemoveController',
-//                 title: 'Projetos'
-//             })
-
-//             .when('/project/:id/members', {
-//                 templateUrl: 'build/views/project-member/list.html',
-//                 controller: 'ProjectMemberListController',
-//                 title: 'Projetos'
-//             })
-//             .when('/project/:id/member/:idProjectMember/remove', {
-//                 templateUrl: 'build/views/project-member/remove.html',
-//                 controller: 'ProjectMemberRemoveController',
-//                 title: 'Projetos'
+//             Project.query({
+//                 orderBy: 'created_at',
+//                 sortedBy: 'desc'
+//             }, function (response) {
+//                 $scope.projects = response.data;
 //             });
 
+//             var pusher = $pusher(window.client);
+//             var channel = pusher.subscribe('user.' + $cookies.getObject('user').id);
+//             channel.bind('CodeProject\\Events\\TaskWasIncluded',
+//                 function (data) {
+//                     var start_date = data.task.start_date;
+//                     var msgm = "Tarefa '"+data.task.name+"' foi incluída. ";
+//                     var msgm2 = "";
 
-//         OAuthProvider.configure({
-//             baseUrl: appConfigProvider.config.baseUrl,
-//             clientId: 'appid1',
-//             clientSecret: 'secret',
-//             grantPath: 'oauth/access_token'
-//         });
+//                     if(start_date != null){
+//                         msgm2 = "Data de início: "+$filter('dateBr')(start_date);
+//                     }
 
-//         OAuthTokenProvider.configure({
-//             name: 'token',
-//             options: {
-//                 secure: false
-//             }
-//         })
-//     }]);
-
-// app.run(['$rootScope', '$location', '$http', '$modal','$cookies','$pusher','$filter','httpBuffer','OAuth','appConfig','Notification',
-//     function ($rootScope,$location,$http,$modal,$cookies,$pusher,$filter,httpBuffer,OAuth,appConfig,Notification) {
-
-//     $rootScope.$on('pusher-build',function(event, data){
-//         if (data.next.$$route.originalPath != '/login') {
-//             if(OAuth.isAuthenticated()){
-//                 if(!window.client) {
-//                     window.client = new Pusher(appConfig.pusherKey);
-//                     var pusher = $pusher(window.client);
-//                     var channel = pusher.subscribe('user.' + $cookies.getObject('user').id);
-//                     channel.bind('CodeProject\\Events\\TaskWasIncluded',
-//                         function (data) {
-//                             var name = data.task.name;
-//                             var start_date = data.task.start_date;
-//                             var msgm = "Tarefa '"+name+"' foi incluída!";
-
-//                             if(start_date != null){
-//                                 msgm += "<br> Data de início: "+$filter('dateBr')(start_date);
-//                             }
-
-//                             Notification.success(msgm);
-//                         }
-//                     );
-//                     channel.bind('CodeProject\\Events\\TaskChanged',
-//                         function (data) {
-//                             var name = data.task.name;
-//                             var start_date = data.task.start_date;
-//                             var msgm = "Tarefa '"+name+"' foi alterada!";
-
-//                             if(data.task.status == 2){
-//                                 msgm = "Tarefa '"+name+"' foi concluída!";
-//                             }
-//                             Notification.success(msgm);
-//                         }
-//                     );
-
+//                     $scope.insertNotificationInPanel({msgm: msgm, msgm2: msgm2});
 //                 }
-//             }
-//         }
-//     });
+//             );
+//             channel.bind('CodeProject\\Events\\TaskChanged',
+//                 function (data) {
+//                     var msgm = "Tarefa '"+data.task.name+"' foi alterada";
 
-//     $rootScope.$on('pusher-destroy',function(event, data){
-//         if (data.next.$$route.originalPath == '/login') {
-//             if (window.client) {
-//                 window.client.disconnect();
-//                 window.client = null;
-//             }
-//         }
-//     });
+//                     if(data.task.status == 2){
+//                         msgm = "Tarefa '"+data.task.name+"' foi concluída";
+//                     }
+//                     $scope.insertNotificationInPanel({msgm: msgm});
+//                 }
+//             );
+
+//             $scope.insertNotificationInPanel = function($msgm){
+//                 if ($scope.notifications.length == 6) {
+//                     $scope.notifications.splice($scope.notifications.length - 1, 1);
+//                 }
+//                 $timeout(function () {
+//                     $scope.notifications.unshift($msgm);
+//                 }, 300);
+//             };
+
+        // }]);
 
 
-//     $rootScope.$on('$routeChangeStart', function (event, next, current) {
-//         if (next.$$route.originalPath != '/login') {
-//             if (!OAuth.isAuthenticated()) {
-//                 $location.path('login');
-//             }
-//         }
-//         $rootScope.$emit('pusher-build', {next: next});
-//         $rootScope.$emit('pusher-destroy',{next: next});
-//     });
 
-//     $rootScope.$on('$routeChangeSuccess', function(event, current, previous){
-//         $rootScope.pageTitle = current.$$route.title;
-//     });
-
-//     $rootScope.$on('oauth:error', function (event, data) {
-//         // Ignore `invalid_grant` error - should be catched on `LoginController`.
-//         if ('invalid_grant' === data.rejection.data.error) {
-//             return;
-//         }
-
-//         // Refresh token when a `invalid_token` error occurs.
-//         if ('access_denied' === data.rejection.data.error) {
-//             httpBuffer.append(data.rejection.config, data.deferred);
-//             if(!$rootScope.loginModalOpened) {
-//                 var modalInstance = $modal.open({
-//                     templateUrl: 'build/views/templates/refreshModal.html',
-//                     controller: 'RefreshModalController'
-//                 });
-//                 $rootScope.loginModalOpened = true;
-//             }
-//             return;
-//         }
-
-//         // Redirect to `/login` with the `error_reason`.
-//         return $location.path('login');
-//     });
-// }]);
 angular.module('app.controllers')
-    .controller('HomeController', ['$scope','$cookies', '$timeout', '$pusher','$filter','appConfig','Project',
-        function ($scope,$cookies,$timeout, $pusher,$filter,appConfig,Project) {
+    .controller('HomeController', ['$scope', function($scope){
+        
 
-            $scope.projects = [];
-            $scope.notifications = [];
-            $scope.status = appConfig.project.status;
-
-            $scope.getStatus = function($id) {
-                for (var i = 0; i < $scope.status.length; i++) {
-                    if($scope.status[i].value === $id){
-                        return $scope.status[i].label;
-                    }
-                }
-                return "";
-            };
-
-            Project.query({
-                orderBy: 'created_at',
-                sortedBy: 'desc'
-            }, function (response) {
-                $scope.projects = response.data;
-            });
-
-            var pusher = $pusher(window.client);
-            var channel = pusher.subscribe('user.' + $cookies.getObject('user').id);
-            channel.bind('CodeProject\\Events\\TaskWasIncluded',
-                function (data) {
-                    var start_date = data.task.start_date;
-                    var msgm = "Tarefa '"+data.task.name+"' foi incluída. ";
-                    var msgm2 = "";
-
-                    if(start_date != null){
-                        msgm2 = "Data de início: "+$filter('dateBr')(start_date);
-                    }
-
-                    $scope.insertNotificationInPanel({msgm: msgm, msgm2: msgm2});
-                }
-            );
-            channel.bind('CodeProject\\Events\\TaskChanged',
-                function (data) {
-                    var msgm = "Tarefa '"+data.task.name+"' foi alterada";
-
-                    if(data.task.status == 2){
-                        msgm = "Tarefa '"+data.task.name+"' foi concluída";
-                    }
-                    $scope.insertNotificationInPanel({msgm: msgm});
-                }
-            );
-
-            $scope.insertNotificationInPanel = function($msgm){
-                if ($scope.notifications.length == 6) {
-                    $scope.notifications.splice($scope.notifications.length - 1, 1);
-                }
-                $timeout(function () {
-                    $scope.notifications.unshift($msgm);
-                }, 300);
-            };
-
-        }]);
+    }]);
 angular.module('app.controllers')
-.controller('LoginController', ['$scope','$location','$cookies','OAuth','User',
-    function($scope, $location, $cookies, OAuth, User){
-    $scope.user = {
-        username: '',
-        password: ''
-    };
+    .controller('LoginController', ['$scope', function($scope){
+        $scope.user = {
+            username: = '',
+            password: = ''
+        };
 
-    $scope.error = {
-        message: '',
-        error: false
-    };
+        $scope.login = function() {
 
-    $scope.login = function(){
-        if($scope.form.$valid) {
-            OAuth.getAccessToken($scope.user).then(function () {
-                User.authenticated({}, {}, function(data){
-                    $cookies.putObject('user', data);
-                    $location.path('home');
-                })
-            }, function (data) {
-                $scope.error.error = true;
-                $scope.error.message = data.data.error_description;
-            });
-        }
-    };
-}]);
+        };
+
+    }]);
 angular.module('app.controllers')
 .controller('LoginModalController',
     ['$rootScope', '$scope','$location','$cookies','$modalInstance','authService','OAuth','OAuthToken','User',
@@ -932,11 +588,6 @@ angular.module('app.controllers')
                 });
 
             }]);
-angular.module('app.filters').filter('dateBr', ['$filter', function($filter){
-    return function(input){
-        return $filter('date')(input,'dd/MM/yyyy');
-    }
-}]);
 angular.module('app.directives')
     .directive('loadTemplate',
         ['$compile', '$http', 'appConfig', 'OAuth', function ($compile, $http, appConfig, OAuth) {
@@ -1075,6 +726,11 @@ angular.module('app.directives')
             };
         }]);
 
+angular.module('app.filters').filter('dateBr', ['$filter', function($filter){
+    return function(input){
+        return $filter('date')(input,'dd/MM/yyyy');
+    }
+}]);
 angular.module('app.services')
 .service('Client', ['$resource', 'appConfig', function($resource, appConfig){
     return $resource(appConfig.baseUrl + '/client/:id', {id: '@id'}, {
