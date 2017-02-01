@@ -5,23 +5,36 @@ angular.module('app.controllers', ['ngMessages','angular-oauth2']);
 angular.module('app.services', ['ngResource']);
 
 app.provider('appConfig', function(){
-	var config = {
-	baseUrl: 'http://localhost:8000'
-	};
+    var config = {
+    baseUrl: 'http://localhost:8000'
+    };
 
-	 return {
+     return {
         config: config,
         $get: function () {
             return config;
         }
-	}
+    }
 
 });
 
-app.config(['$routeProvider', 'OAuthProvider', 
-	'OAuthTokenProvider', 'appConfigProvider', 
-	function ($routeProvider, OAuthProvider, 
-		OAuthTokenProvider, appConfigProvider) {
+app.config(['$routeProvider', '$httpProvider', 'OAuthProvider', 
+    'OAuthTokenProvider', 'appConfigProvider', 
+    function ($routeProvider, $httpProvider, OAuthProvider, 
+        OAuthTokenProvider, appConfigProvider) {
+        $httpProvider.defaults.transformResponse = function (data,headers) {
+                var headersGetter = headers();
+                if(headersGetter['content-type'] == 'application/json' ||
+                headersGetter['content-type'] == 'text/json')  {
+                var dataJson = JSON.parse(data);
+                if(dataJson.hasOwnProperty('data')) {
+                        dataJson = dataJson.data;
+                }
+                return dataJson;    
+            }
+            return data;
+        };
+
         $routeProvider
             .when('/login', {
                 templateUrl: 'build/views/login.html',
@@ -36,13 +49,13 @@ app.config(['$routeProvider', 'OAuthProvider',
                 templateUrl: 'build/views/client/list.html',
                 controller: 'ClientListController',
                 title: 'Clientes'
-			})
+            })
              .when('/clients/dashboard', {
                 templateUrl: 'build/views/client/dashboard.html',
                 controller: 'ClientDashboardController',
                 title: 'Clientes'
             })
-            .when('/client/new', {
+            .when('/clients/new', {
                 templateUrl: 'build/views/client/new.html',
                 controller: 'ClientNewController',
                 title: 'Clientes'
@@ -56,20 +69,20 @@ app.config(['$routeProvider', 'OAuthProvider',
                 templateUrl: 'build/views/client/remove.html',
                 controller: 'ClientRemoveController',
                 title: 'Clientes'
-			});
+            });
             OAuthProvider.configure({
-		      baseUrl: appConfigProvider.config.baseUrl,
-		      clientId: 'appid1',
-		      clientSecret: 'secret', // optional
-		      grantPath: 'oauth/accees_token'
-		    });
+              baseUrl: appConfigProvider.config.baseUrl,
+              clientId: 'appid1',
+              clientSecret: 'secret', // optional
+              grantPath: 'oauth/accees_token'
+            });
 
-		    OAuthTokenProvider.configure({
+            OAuthTokenProvider.configure({
             name: 'token',
             options: {
                 secure: false
             }
-			})
+            })
 
 }]);
 
