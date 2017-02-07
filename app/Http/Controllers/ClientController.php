@@ -4,8 +4,8 @@ namespace CodeProject\Http\Controllers;
 
 use CodeProject\Repositories\ClientRepository;
 use Illuminate\Http\Request;
-// use CodeProject\Entities\Client;
-// use CodeProject\Repositories\ClientRepositoryEloquent;
+use CodeProject\Entities\Client;
+use CodeProject\Repositories\ClientRepositoryEloquent;
 use CodeProject\Services\ClientService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
@@ -96,7 +96,7 @@ class ClientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return Client::find($id)->update($request->all());
+        return $this->service->update($request->all(), $id);
     }
 
     /**

@@ -6,16 +6,12 @@ angular.module('app.controllers')
         $scope.client = Client.get({id:$routeParams.id});
 
 
-         $scope.error = {
-            message: '',
-            error: false
-        };
-
+      
         $scope.save = function()
         {
             if($scope.form.$valid)
             {
-                Client.update({id: $scope.client.client_id}, $scope.client, function()
+                Client.update({id: $scope.client.id}, $scope.client, function()
                 {
                     $location.path('/clients');
                 });

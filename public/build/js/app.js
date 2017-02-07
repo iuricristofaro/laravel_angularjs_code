@@ -69,7 +69,36 @@ app.config(['$routeProvider', '$httpProvider', 'OAuthProvider',
                 templateUrl: 'build/views/client/remove.html',
                 controller: 'ClientRemoveController',
                 title: 'Clientes'
+            })
+            
+            .when('/project/:id/notes', {
+                templateUrl: 'build/views/project-note/list.html',
+                controller: 'ProjectNoteListController',
+                title: 'Projetos'
+            })
+            .when('/project/:id/note/:idNote/show', {
+                templateUrl: 'build/views/project-note/show.html',
+                controller: 'ProjectNoteShowController',
+                title: 'Projetos'
+            })
+            .when('/project/:id/note/new', {
+                templateUrl: 'build/views/project-note/new.html',
+                controller: 'ProjectNoteNewController',
+                title: 'Projetos'
+            })
+            .when('/project/:id/note/:idNote/edit', {
+                templateUrl: 'build/views/project-note/edit.html',
+                controller: 'ProjectNoteEditController',
+                title: 'Projetos'
+            })
+            .when('/project/:id/note/:idNote/remove', {
+                templateUrl: 'build/views/project-note/remove.html',
+                controller: 'ProjectNoteRemoveController',
+                title: 'Projetos'
             });
+
+
+
             OAuthProvider.configure({
               baseUrl: appConfigProvider.config.baseUrl,
               clientId: 'appid1',
